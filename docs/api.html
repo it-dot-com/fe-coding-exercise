@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>IT.com WeatherCal API</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="media/css/restdown.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="header">
+    <h1>IT.com WeatherCal API Documentation</h1>
+</div>
+
+    <div id="sidebar">
+<ul>
+  <li><div><a href="#weather">Weather</a></div>
+  <ul>
+    <li><div><a href="#GET-/weather/zip/:zipcode"><span class="method justendpoint"><span class="endpoint"><span class="verb">GET</span> <span class="path">/weather/zip/:zipcode</span></span></span></a></div></li>
+  </ul></li>
+  <li><div><a href="#events">Events</a></div>
+  <ul>
+    <li><div><a href="#GET-/events"><span class="method justendpoint"><span class="endpoint"><span class="verb">GET</span> <span class="path">/events</span></span></span></a></div></li>
+    <li><div><a href="#GET-/events/:id"><span class="method justendpoint"><span class="endpoint"><span class="verb">GET</span> <span class="path">/events/:id</span></span></span></a></div></li>
+    <li><div><a href="#POST-/events"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/events</span></span></span></a></div></li>
+    <li><div><a href="#PUT-/events/:id"><span class="method justendpoint"><span class="endpoint"><span class="verb">PUT</span> <span class="path">/events/:id</span></span></span></a></div></li>
+  </ul></li>
+</ul>
+
+    </div>
+    <div id="content">
+
+<h1>WeatherCal API</h1>
+<div class="intro">
+
+
+<h3>Path</h3>
+
+<p>It's assumed for these docs that you're running the server on <code>http://localhost:8888</code>.</p>
+
+<h3>Format</h3>
+
+<p>All calls are returned in <strong>JSON</strong>.</p>
+
+<h3>Status Codes</h3>
+
+<ul>
+<li><strong>200</strong> Success.</li>
+<li><strong>404</strong> Resource Not Found</li>
+<li><strong>500</strong> Error</li>
+</ul>
+
+
+</div>
+<h1 id="weather">Weather</h1>
+
+<h2 id="GET-/weather/zip/:zipcode"><span class="method justendpoint"><span class="endpoint"><span class="verb">GET</span> <span class="path">/weather/zip/:zipcode</span></span></span></h2>
+
+<p>Proxies a request to open weather cal. API will return whatever that api returns.</p>
+
+<h4 id="example-request">example request</h4>
+
+<pre class="shell"><code>curl http://localhost:8888/weather/zip/20036
+</code></pre>
+
+<h4 id="response">response</h4>
+
+<pre><code>{
+    "coord": {
+        "lon": -77.04,
+        "lat": 38.9
+    },
+    "weather": [
+        {
+            "id": 803,
+            "main": "Clouds",
+            "description": "broken clouds",
+            "icon": "04d"
+        }
+    ],
+    "base": "cmc stations",
+    "main": {
+        "temp": 290.561,
+        "pressure": 1030.32,
+        "humidity": 49,
+        "temp_min": 290.561,
+        "temp_max": 290.561,
+        "sea_level": 1036.77,
+        "grnd_level": 1030.32
+    },
+    "wind": {
+        "speed": 2.11,
+        "deg": 248.001
+    },
+    "clouds": {
+        "all": 56
+    },
+    "dt": 1463430612,
+    "sys": {
+        "message": 0.0042,
+        "country": "US",
+        "sunrise": 1463392418,
+        "sunset": 1463444161
+    },
+    "id": 4140963,
+    "name": "Washington, D. C.",
+    "cod": 200
+}
+</code></pre>
+
+<h1 id="events">Events</h1>
+
+<h2 id="GET-/events"><span class="method justendpoint"><span class="endpoint"><span class="verb">GET</span> <span class="path">/events</span></span></span></h2>
+
+<p>Retrieves all events in the calendar database as an array. Each calendar envent has an <code>id</code> property which is used with other endpoints requiring an id.</p>
+
+<h4 id="example-request-2">example request</h4>
+
+<pre class="shell"><code>curl http://localhost:8888/events
+</code></pre>
+
+<h4 id="response-2">response</h4>
+
+<pre><code>[
+    {
+        "id": 1,
+        "title": "Breakfast with Joe Schmoe",
+        "description": "Coffee and Biscuts at La Mano",
+        "zipcode": 20012,
+        "date": 1462881600000
+    },
+    {
+        "id": 2,
+        "title": "Lunch with Joan of Arc",
+        "description": "Sandwiches at Italian Gourmet Deli",
+        "zipcode": 20036,
+        "date": 1462896000000
+    }
+]
+</code></pre>
+
+<h2 id="GET-/events/:id"><span class="method justendpoint"><span class="endpoint"><span class="verb">GET</span> <span class="path">/events/:id</span></span></span></h2>
+
+<p>Retrieves a single event with the given id.</p>
+
+<h4 id="example-request-3">example request</h4>
+
+<pre class="shell"><code>curl http://localhost:8888/events/1
+</code></pre>
+
+<h4 id="response-3">response</h4>
+
+<pre><code>{
+    "id": 2,
+    "title": "Lunch with Joan of Arc",
+    "description": "Sandwiches at Italian Gourmet Deli",
+    "zipcode": 20036,
+    "date": 1462896000000
+}
+</code></pre>
+
+<h2 id="POST-/events"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/events</span></span></span></h2>
+
+<p>Creates a new event in the calendar database. Returns the newly created event.</p>
+
+<h4 id="example-request-4">example request</h4>
+
+<pre class="shell"><code>curl -i -X POST -H "Content-type:text/json" -d@- localhost:8888/events &lt;&lt;-EOF
+&gt; {
+&gt;   "title": "Lunch with Joan of Arc",
+&gt;   "description": "Sandwiches at Italian Gourmet Deli",
+&gt;   "zipcode": 20036,
+&gt;   "date": 1462896000000
+&gt; }
+&gt; EOF
+</code></pre>
+
+<h4 id="response-4">response</h4>
+
+<pre><code>{
+    "id": 2,
+    "title": "Lunch with Joan of Arc",
+    "description": "Sandwiches at Italian Gourmet Deli",
+    "zipcode": 20036,
+    "date": 1462896000000
+}
+</code></pre>
+
+<h2 id="PUT-/events/:id"><span class="method justendpoint"><span class="endpoint"><span class="verb">PUT</span> <span class="path">/events/:id</span></span></span></h2>
+
+<p>Updates the event with the given id in the calendar database. Returns the updated event.</p>
+
+<h4 id="example-request-5">example request</h4>
+
+<pre class="shell"><code>curl -i -X PUT -H "Content-type:text/json" -d@- localhost:8888/events/2 &lt;&lt;-EOF
+&gt; {
+&gt;   "id": 2,
+&gt;   "title": "Lunch with Voltaire",
+&gt;   "description": "Sandwiches at Loeb's New York Deli",
+&gt;   "zipcode": 20036,
+&gt;   "date": 1462896000000
+&gt; }
+&gt; EOF
+</code></pre>
+
+<h4 id="response-5">response</h4>
+
+<pre><code>{
+    "id": 2,
+    "title": "Lunch with Voltaire",
+    "description": "Sandwiches at Loeb's New York Deli",
+    "zipcode": 20036,
+    "date": 1462896000000
+}
+</code></pre>
+
+    </div> <!-- #content -->
+<script type="text/javascript" charset="utf-8">
+$(function() {
+    var headerHeight = $("#header").height();
+
+    var sections = $("#content h1[id], #content h2[id]");
+    var sectionOffsets = [];
+    var slack = 100;  // Give the section scroll some slack (in pixels).
+    sections.each(function(elem) {
+        sectionOffsets.push($(this).offset().top - headerHeight - slack);
+    });
+
+    var currSectionIdx = -1;
+    function getSectionIdx(scrollDistance) {
+        if (scrollDistance < sectionOffsets[0]) {
+            return -1;
+        } else {
+            for (var id = sectionOffsets.length; id > 0; id--) {
+                if (scrollDistance > sectionOffsets[id - 1]) {
+                    return id - 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    /** {{{ http://code.activestate.com/recipes/577787/ (r2) */
+    _slugify_strip_re = /[^\w\s-]/g;
+    _slugify_hyphenate_re = /[-\s]+/g;
+    function slugify(s) {
+      s = s.replace(_slugify_strip_re, '').trim().toLowerCase();
+      s = s.replace(_slugify_hyphenate_re, '-');
+      return s;
+    }
+    /** end of http://code.activestate.com/recipes/577787/ }}} */
+
+    /* See <https://github.com/trentm/restdown/issues/11>. */
+    function safechars(s) {
+      return s.replace(_slugify_strip_re, '');
+    }
+
+    $("#content").scroll(function() {
+        var scrollDistance = $("#content").scrollTop();
+        var sectionIdx = getSectionIdx(scrollDistance);
+
+        if (sectionIdx !== currSectionIdx) {
+            $("#sidebar li>div").removeClass("current");
+            currSectionIdx = sectionIdx;
+            if (currSectionIdx >= 0) {
+                var heading = $(sections[currSectionIdx]).text();
+                var possibleAnchors = [
+                    slugify(heading), // h1 or non-method h2
+                    heading.replace(/ /g, '-'), // h2 method, just name or just endpoint
+                    heading.slice(0, heading.lastIndexOf(' (')).trimRight().replace(/ /g, '-'), // h2 method, name and endpoint
+                ];
+                for (var i=0; i < possibleAnchors.length; i++) {
+                    var anchor = safechars(possibleAnchors[i]);
+                    try {
+                        $("#sidebar a[href=#" + anchor + "]").parent().addClass("current");
+                    } catch (e) {
+                        /* Ignore error if no such element. */
+                        console.log(e)
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>

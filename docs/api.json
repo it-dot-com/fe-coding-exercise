@@ -1,0 +1,10 @@
+{
+  "endpoints": [
+    "GET    /weather/zip/:zipcode",
+    "GET    /events",
+    "GET    /events/:id",
+    "POST   /events",
+    "PUT    /events/:id"
+  ],
+  "version": "1.0.0"
+}

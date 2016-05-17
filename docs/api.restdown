@@ -1,0 +1,173 @@
+---
+title: IT.com WeatherCal API
+version: 1.0.0
+---
+
+# WeatherCal API
+
+### Path
+
+It's assumed for these docs that you're running the server on `http://localhost:8888`.
+
+### Format
+
+All calls are returned in **JSON**.
+
+### Status Codes
+
+- **200** Success.
+- **404** Resource Not Found
+- **500** Error
+
+
+# Weather
+
+## GET /weather/zip/:zipcode
+
+Proxies a request to open weather cal. API will return whatever that api returns.
+
+#### example request
+
+    $ curl http://localhost:8888/weather/zip/20036
+
+#### response
+
+    {
+        "coord": {
+            "lon": -77.04,
+            "lat": 38.9
+        },
+        "weather": [
+            {
+                "id": 803,
+                "main": "Clouds",
+                "description": "broken clouds",
+                "icon": "04d"
+            }
+        ],
+        "base": "cmc stations",
+        "main": {
+            "temp": 290.561,
+            "pressure": 1030.32,
+            "humidity": 49,
+            "temp_min": 290.561,
+            "temp_max": 290.561,
+            "sea_level": 1036.77,
+            "grnd_level": 1030.32
+        },
+        "wind": {
+            "speed": 2.11,
+            "deg": 248.001
+        },
+        "clouds": {
+            "all": 56
+        },
+        "dt": 1463430612,
+        "sys": {
+            "message": 0.0042,
+            "country": "US",
+            "sunrise": 1463392418,
+            "sunset": 1463444161
+        },
+        "id": 4140963,
+        "name": "Washington, D. C.",
+        "cod": 200
+    }
+
+# Events 
+
+## GET /events
+
+Retrieves all events in the calendar database as an array. Each calendar envent has an `id` property which is used with other endpoints requiring an id.
+
+#### example request
+
+    $ curl http://localhost:8888/events
+
+#### response
+
+    [
+        {
+            "id": 1,
+            "title": "Breakfast with Joe Schmoe",
+            "description": "Coffee and Biscuts at La Mano",
+            "zipcode": 20012,
+            "date": 1462881600000
+        },
+        {
+            "id": 2,
+            "title": "Lunch with Joan of Arc",
+            "description": "Sandwiches at Italian Gourmet Deli",
+            "zipcode": 20036,
+            "date": 1462896000000
+        }
+    ]
+
+## GET /events/:id
+
+Retrieves a single event with the given id.
+
+#### example request
+    
+    $ curl http://localhost:8888/events/1
+
+#### response
+
+    {
+        "id": 2,
+        "title": "Lunch with Joan of Arc",
+        "description": "Sandwiches at Italian Gourmet Deli",
+        "zipcode": 20036,
+        "date": 1462896000000
+    }
+
+## POST /events
+
+Creates a new event in the calendar database. Returns the newly created event.
+
+#### example request
+
+    $ curl -i -X POST -H "Content-type:text/json" -d@- localhost:8888/events <<-EOF
+    > {
+    >   "title": "Lunch with Joan of Arc",
+    >   "description": "Sandwiches at Italian Gourmet Deli",
+    >   "zipcode": 20036,
+    >   "date": 1462896000000
+    > }
+    > EOF
+
+#### response
+
+    {
+        "id": 2,
+        "title": "Lunch with Joan of Arc",
+        "description": "Sandwiches at Italian Gourmet Deli",
+        "zipcode": 20036,
+        "date": 1462896000000
+    }
+
+## PUT /events/:id
+
+Updates the event with the given id in the calendar database. Returns the updated event.
+
+#### example request
+
+    $ curl -i -X PUT -H "Content-type:text/json" -d@- localhost:8888/events/2 <<-EOF
+    > {
+    >   "id": 2,
+    >   "title": "Lunch with Voltaire",
+    >   "description": "Sandwiches at Loeb's New York Deli",
+    >   "zipcode": 20036,
+    >   "date": 1462896000000
+    > }
+    > EOF
+
+#### response
+
+    {
+        "id": 2,
+        "title": "Lunch with Voltaire",
+        "description": "Sandwiches at Loeb's New York Deli",
+        "zipcode": 20036,
+        "date": 1462896000000
+    }
